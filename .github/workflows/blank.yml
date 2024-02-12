@@ -1,0 +1,42 @@
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - 'test.yml'
+  workflow_dispatch:
+    branches:
+      - "main"
+ 
+jobs:
+  deploy:
+    name: Test OpenID
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
+        aws-region: us-west-2
+        
+
+    - name: Check-if-Worked
+      run: |
+        aws sts get-caller-identity
+
+    - name: CloudFormation-Test
+      id: Test-Security-Group
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        name: SecurityGroup-Test-20230523
+        template: test.yml
+        no-fail-on-empty-changeset: "1"
+        role-arn: arn:aws:iam::xxxxxxx:role/CloudFormation-Execution-Role-From-GitHub
+        parameter-overrides: >-
+          VPCa=vpc-xxxxxxxxx
