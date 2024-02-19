@@ -10,7 +10,7 @@ on:
   
 jobs:
   deploy:
-    name: Test OpenID
+    name: Update contreras.io website
     runs-on: ubuntu-latest
     permissions:
       id-token: write
