@@ -1,35 +1,35 @@
 on:
-    push:
-      branches:
-        - "dev"
-      paths:
-        - 'infra/contreras-io-infra.yml'
-    workflow_dispatch:
-      branches:
-        - "dev"
+  push:
+    branches:
+      - "dev"
+    paths:
+      - 'infra/contreras-io-infra.yml'
+  workflow_dispatch:
+    branches:
+      - "dev"
 
-  jobs:
-    deploy:
-      name: Update contreras.io infra
-      runs-on: ubuntu-latest
-      permissions:
-        id-token: write
-        contents: read
-      steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-  
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
-          aws-region: us-west-1
+jobs:
+  deploy:
+    name: Update contreras.io infra
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: CloudFormation-Test
-        id: build-dev-contreras-io
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: build-dev-contreras-io
-          template: infra/contreras-io-infra.yml
-          no-fail-on-empty-changeset: "1"
-          role-arn: ${{ secrets.AWS_ROLE_ACTION }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
+        aws-region: us-west-1
+
+    - name: CloudFormation-Test
+      id: build-dev-contreras-io
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        name: build-dev-contreras-io
+        template: infra/contreras-io-infra.yml
+        no-fail-on-empty-changeset: "1"
+        role-arn: ${{ secrets.AWS_ROLE_ACTION }}
