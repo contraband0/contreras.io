@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  websites3:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: dev.contreras.io
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration: 
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      Tags: 
+        - Key: repo
+          Value: https://github.com/contraband0/contreras.io
