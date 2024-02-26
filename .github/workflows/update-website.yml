@@ -29,12 +29,14 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
         aws-region: us-west-1
-
+  
     - name: test echos
       run: |
         echo "here is bucket name: ${{env.S3_BUCKET_NAME}}"
-#        echo "here is bucket name: ${{var.S3_BUCKET_NAME}}"
+        echo "here is bucket name: $S3_BUCKET_NAME"
         echo "variable from shell environment : $env_var"
+      env:
+        S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
 
     - name: Update Website by Sync
       run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
