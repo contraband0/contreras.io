@@ -8,6 +8,9 @@ on:
     branches:
       - "main"
       - "dev"
+
+env:
+  S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
       
 jobs:
   deploy:
@@ -31,7 +34,6 @@ jobs:
     - name: test echos
       run: |
         echo "here is bucket name: ${{env.S3_BUCKET_NAME}}"
-        echo "here is bucket name: ${{var.S3_BUCKET_NAME}}"
       env:
         S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
 
