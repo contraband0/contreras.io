@@ -32,7 +32,7 @@ jobs:
     - name: test echos
       run: |
         echo "here is bucket name: ${{env.S3_BUCKET_NAME}}"
-        echo "here is bucket name: ${{var.S3_BUCKET_NAME}}"
+#        echo "here is bucket name: ${{var.S3_BUCKET_NAME}}"
         echo "variable from shell environment : $env_var"
 
     - name: Update Website by Sync
