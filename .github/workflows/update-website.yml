@@ -13,11 +13,28 @@ env:
   S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
       
 jobs:
+  set-environment:
+    runs-on: ubuntu-latest 
+    outputs: #the env value needs to be exposed as an output in order to be reached from other jobs
+      current_env: ${{ steps.set_env.outputs.current_env }} #output variable to store the relevant environment
+    steps:
+      - name: Check if prod
+        if: endsWith(github.ref, '/main') #if the triggering branch is 'main'
+        run: |
+          echo "ENVIRONMENT_NAME=prod" >> $GITHUB_ENV #retrieve secrets from 'prod' environment in Github
+      - name: Check if dev
+        if: endsWith(github.ref, '/dev') #if the triggering branch is 'dev'
+        run: |
+          echo "ENVIRONMENT_NAME=dev" >> $GITHUB_ENV #retrieve secrets from 'dev' environment in Github
+      - name: Set output
+        id: set_env
+        run: echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env' 
+
   deploy:
     name: Update contreras.io website
     runs-on: ubuntu-latest
-    environment:
-      name: dev
+    needs: set-environment
+    environment: ${{ needs.set-environment.outputs.current_env }}
     permissions:
       id-token: write
       contents: read
