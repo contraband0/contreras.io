@@ -10,7 +10,8 @@ on:
       - "dev"
 
 env:
-  S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
+  # Setting an environment variable with the value of a configuration variable
+  env_var: ${{ vars.ENV_CONTEXT_VAR }}
       
 jobs:
   deploy:
@@ -34,8 +35,12 @@ jobs:
     - name: test echos
       run: |
         echo "here is bucket name: ${{env.S3_BUCKET_NAME}}"
+        echo "here is bucket name: $S3_BUCKET_NAME"
+        echo "variable from shell environment : $env_var"
       env:
         S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
 
     - name: Update Website by Sync
-      run: aws s3 sync ./website/ s3://${{var.S3_BUCKET_NAME}} --delete
+      run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
+      env:
+        S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
