@@ -7,7 +7,11 @@ on:
   workflow_dispatch:
     branches:
       - "main"
-  
+
+env:
+  # Setting an environment variable with the value of a configuration variable
+  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+      
 jobs:
   deploy:
     name: Update contreras.io website
@@ -25,6 +29,11 @@ jobs:
         role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
         aws-region: us-west-1
         
+    - name: test echos
+      run: |
+        echo "here is bucket name: ${{env.S3_BUCKET_NAME}}"
+        echo "here is bucket name: ${{var.S3_BUCKET_NAME}}"
+        echo "variable from shell environment : $env_var"
 
     - name: Update Website by Sync
       run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
