@@ -32,4 +32,4 @@ jobs:
         name: build-dev-contreras-io
         template: infra/contreras-io-infra.yml
         no-fail-on-empty-changeset: "1"
-        role-arn: ${{ secrets.AWS_ROLE_ACTION }}
+        role-arn: ${{ secrets.AWS_CF_ASSUME_ROLE }}
