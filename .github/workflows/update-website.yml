@@ -17,7 +17,7 @@ jobs:
   deploy:
     name: Update contreras.io website
     runs-on: ubuntu-latest
-    enviroment:
+    environment:
       name: dev
     permissions:
       id-token: write
