@@ -7,11 +7,35 @@ on:
   workflow_dispatch:
     branches:
       - "main"
-  
+      - "dev"
+
+env:
+  S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
+      
 jobs:
+  set-environment:
+    runs-on: ubuntu-latest 
+    outputs: #the env value needs to be exposed as an output in order to be reached from other jobs
+      current_env2: ${{ steps.set_env.outputs.current_env2 }}
+    steps:
+      - name: Check if prod
+        if: endsWith(github.ref, '/main') #if the triggering branch is 'main'
+        run: |
+          echo "ENVIRONMENT_NAME=prod" >> $GITHUB_ENV #retrieve secrets from 'prod' environment in Github
+      - name: Check if dev
+        if: endsWith(github.ref, '/dev') #if the triggering branch is 'dev'
+        run: |
+          echo "ENVIRONMENT_NAME=dev" >> $GITHUB_ENV #retrieve secrets from 'dev' environment in Github
+      - name: Set output
+        id: set_env
+        run: |
+          echo "current_env2=${{ env.ENVIRONMENT_NAME }}" >> "$GITHUB_OUTPUT"
+
   deploy:
     name: Update contreras.io website
     runs-on: ubuntu-latest
+    needs: set-environment
+    environment: ${{ needs.set-environment.outputs.current_env2 }}
     permissions:
       id-token: write
       contents: read
@@ -24,7 +48,6 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
         aws-region: us-west-1
-        
-
+         
     - name: Update Website by Sync
-      run: aws s3 sync ./website/ s3://www.contreras.io --delete
+      run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
