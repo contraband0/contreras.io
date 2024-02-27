@@ -16,7 +16,7 @@ jobs:
   set-environment:
     runs-on: ubuntu-latest 
     outputs: #the env value needs to be exposed as an output in order to be reached from other jobs
-#      current_env: ${{ steps.set_env.outputs.current_env }} #output variable to store the relevant environment
+      current_env: ${{ steps.set_env.outputs.current_env }} #output variable to store the relevant environment
       current_env2: ${{ steps.set_env.outputs.current_env2 }}
     steps:
       - name: Check if prod
@@ -30,7 +30,7 @@ jobs:
       - name: Set output
         id: set_env
         run: |
-#          echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env'
+          echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env'
           echo "current_env2=${{ env.ENVIRONMENT_NAME }}" >> "$GITHUB_OUTPUT"
 
   deploy:
