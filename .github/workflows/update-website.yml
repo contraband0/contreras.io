@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest 
     outputs: #the env value needs to be exposed as an output in order to be reached from other jobs
       current_env: ${{ steps.set_env.outputs.current_env }} #output variable to store the relevant environment
+      ENVIRONMENT_NAME: ${{ steps.set_env.outputs.current_env2 }}
     steps:
       - name: Check if prod
         if: endsWith(github.ref, '/main') #if the triggering branch is 'main'
@@ -51,6 +52,9 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
         aws-region: us-west-1
-  
+    
+    - name: more echo
+      run: echo "${{ steps.set_env.outputs.current_env2 }}"  
+    
     - name: Update Website by Sync
       run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
