@@ -16,7 +16,6 @@ jobs:
   set-environment:
     runs-on: ubuntu-latest 
     outputs: #the env value needs to be exposed as an output in order to be reached from other jobs
-      current_env: ${{ steps.set_env.outputs.current_env }} #output variable to store the relevant environment
       current_env2: ${{ steps.set_env.outputs.current_env2 }}
     steps:
       - name: Check if prod
