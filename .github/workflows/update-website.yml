@@ -32,8 +32,6 @@ jobs:
         run: |
           echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env'
           echo "current_env2=${{ env.ENVIRONMENT_NAME }}" >> "$GITHUB_OUTPUT"
-          echo "$current_env2"
-          echo "${{ needs.set-environment.outputs.current_env2 }}"
 
   deploy:
     name: Update contreras.io website
@@ -52,9 +50,6 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ACTION }}
         aws-region: us-west-1
-    
-    - name: more echo
-      run: echo "${{ needs.set-environment.outputs.current_env2 }}"  
-    
+         
     - name: Update Website by Sync
       run: aws s3 sync ./website/ s3://${{env.S3_BUCKET_NAME}} --delete
