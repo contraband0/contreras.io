@@ -28,7 +28,10 @@ jobs:
           echo "ENVIRONMENT_NAME=dev" >> $GITHUB_ENV #retrieve secrets from 'dev' environment in Github
       - name: Set output
         id: set_env
-        run: echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env' 
+        run: |
+          echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}" #assign the value of ENVIRONMENT_NAME to the output variable 'current_env'
+          echo "current_env2=${{ env.ENVIRONMENT_NAME }}" >> $GITHUB_OUTPUT
+          echo "$current_env2"
 
   deploy:
     name: Update contreras.io website
